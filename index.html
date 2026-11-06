@@ -1,0 +1,468 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#050707">
+  <meta name="description" content="HACKBOT PRO Colombia — Aviator, Mines y Penalty.">
+  <title>HACKBOT PRO | Aviator &amp; Penalty Predictor Colombia</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #070809;
+      --panel: #091117;
+      --green: #00efad;
+      --mint: #5ce0b0;
+      --gold: #ffc928;
+      --pink: #e44caf;
+      --blue: #11d4ed;
+      --muted: #a4a7b0;
+      --line: rgba(255,255,255,.12);
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: #f4f5f7;
+      font-family: Arial, Helvetica, system-ui, sans-serif;
+      min-width: 320px;
+    }
+    button, input { font: inherit; }
+    .topbar {
+      position: sticky;
+      z-index: 5;
+      top: 0;
+      min-height: 53px;
+      padding: 9px clamp(14px, 3.2vw, 34px);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      background: rgba(4, 8, 8, .94);
+      border-bottom: 1px solid rgba(0,239,173,.68);
+      box-shadow: 0 2px 15px rgba(0,239,173,.14);
+      backdrop-filter: blur(12px);
+    }
+    .brand {
+      color: #41eeb0;
+      font-weight: 800;
+      font-size: clamp(13px, 2.2vw, 18px);
+      letter-spacing: .35px;
+      text-shadow: 0 0 11px rgba(0,239,173,.9);
+      white-space: nowrap;
+    }
+    .online {
+      padding: 5px 12px;
+      border: 1px solid #00b878;
+      border-radius: 999px;
+      color: #9be4c3;
+      background: rgba(0,135,82,.17);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .35px;
+      white-space: nowrap;
+      box-shadow: inset 0 0 10px rgba(0,239,173,.11);
+    }
+    .online .dot { color: #ff5162; margin-right: 4px; text-shadow: 0 0 8px #ff5162; }
+    main { overflow: hidden; }
+    .wrap { width: min(100% - 28px, 970px); margin-inline: auto; }
+    .hero { padding: 27px 0 50px; text-align: center; }
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      padding: 7px 15px;
+      border: 1px solid #16bd83;
+      border-radius: 999px;
+      background: rgba(0, 167, 104, .08);
+      color: #59d7a8;
+      font-size: 13px;
+      letter-spacing: .15px;
+      box-shadow: 0 0 14px rgba(0,239,173,.08);
+    }
+    h1 {
+      max-width: 760px;
+      margin: 17px auto 15px;
+      color: #5bdca8;
+      font-size: clamp(27px, 5vw, 43px);
+      line-height: 1.18;
+      font-weight: 850;
+      letter-spacing: -.65px;
+      text-shadow: 0 0 18px rgba(0,239,173,.25);
+    }
+    .intro {
+      max-width: 760px;
+      margin: 0 auto;
+      color: #aaaeb7;
+      font-size: clamp(15px, 2vw, 17px);
+      line-height: 1.6;
+    }
+    .intro strong { color: #33e5aa; }
+    .intro .percent { color: #ffd233; font-weight: 800; }
+    .benefits {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 9px 15px;
+      margin: 15px auto 29px;
+      padding: 0;
+      list-style: none;
+      color: #9be8c5;
+      font-size: 12px;
+    }
+    .benefits li::before { content: "☑"; margin-right: 5px; color: #62ecaa; }
+    .connect-card {
+      width: min(100%, 660px);
+      margin: 0 auto;
+      padding: 24px clamp(18px, 5vw, 42px) 25px;
+      border: 2px solid #00d8ac;
+      border-radius: 19px;
+      background: linear-gradient(140deg, rgba(7,18,25,.98), rgba(6,13,16,.98));
+      box-shadow: 0 0 10px rgba(0,239,173,.68), inset 0 0 27px rgba(0,205,159,.08), 0 13px 42px rgba(0,239,173,.13);
+      transition: border-color .25s ease, box-shadow .25s ease;
+    }
+    .connect-card.connecting, .connect-card.is-connected {
+      border-color: #e843bd;
+      box-shadow: 0 0 10px rgba(239,57,191,.75), inset 0 0 27px rgba(0,205,159,.08), 0 13px 42px rgba(231,53,184,.18);
+    }
+    .lock-art { min-height: 75px; font-size: 39px; line-height: 1; filter: drop-shadow(0 0 12px rgba(255,206,90,.23)); }
+    .verify {
+      display: inline-block;
+      margin: 2px auto 22px;
+      padding: 7px 13px;
+      border-radius: 99px;
+      background: #03090c;
+      color: #e2e7ea;
+      font-size: 13px;
+      font-weight: 700;
+      box-shadow: 0 0 12px rgba(0,0,0,.5);
+    }
+    .connect-card form { display: grid; gap: 14px; }
+    .connect-card input {
+      width: 100%;
+      min-height: 52px;
+      padding: 0 16px;
+      border: 2px solid #00d7ae;
+      border-radius: 14px;
+      outline: none;
+      color: #f5f6fa;
+      background: #202b3d;
+      text-align: center;
+      letter-spacing: 1px;
+      box-shadow: 0 0 12px rgba(0,239,173,.1);
+    }
+    .connect-card input::placeholder { color: #abb1c0; }
+    .connect-card input:focus-visible { border-color: #9dffe3; box-shadow: 0 0 0 3px rgba(0,239,173,.22); }
+    .submit {
+      min-height: 56px;
+      padding: 12px 18px;
+      border: 2px solid #78f6cf;
+      border-radius: 14px;
+      color: #04120f;
+      background: linear-gradient(110deg, #00e9ac, #00bb8f);
+      font-size: clamp(15px, 2.5vw, 18px);
+      font-weight: 850;
+      cursor: pointer;
+      box-shadow: 0 0 17px rgba(0,239,173,.44), inset 0 1px rgba(255,255,255,.4);
+      transition: transform .18s ease, filter .18s ease, box-shadow .18s ease;
+    }
+    .submit:hover { filter: brightness(1.08); transform: translateY(-1px); box-shadow: 0 0 24px rgba(0,239,173,.56); }
+    .submit:active { transform: translateY(1px); }
+    .submit:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
+    .form-message { min-height: 0; margin: 0; color: #a5eed4; font-size: 13px; line-height: 1.5; }
+    .form-message:not(:empty) { padding: 10px 12px; border: 1px solid rgba(0,239,173,.4); border-radius: 9px; background: rgba(0,239,173,.07); }
+    .connection-result { padding: 3px 0 0; color: #48d5a4; font-weight: 800; }
+    .connection-result p { margin: 9px 0; font-size: 14px; }
+    .signal-button { width: 100%; margin-top: 4px; }
+    .error-box {
+      width: min(100%, 660px);
+      margin: 40px auto 0;
+      scroll-margin-top: 76px;
+      padding: 27px 20px 25px;
+      border: 2px solid #087d52;
+      border-radius: 19px;
+      background: #080909;
+      text-align: center;
+      box-shadow: 0 0 13px rgba(0,239,139,.28), inset 0 0 19px rgba(0,239,139,.045);
+      animation: box-enter .38s cubic-bezier(.2,.8,.2,1) both;
+    }
+    .error-box[hidden] { display: none; }
+    @keyframes box-enter { from { opacity: 0; transform: translateY(12px) scale(.99); } to { opacity: 1; transform: translateY(0) scale(1); } }
+    .warning-icon { margin: 0 auto 9px; color: #ffc238; font-size: 48px; line-height: 1.15; }
+    .error-box h2 { margin: 0 0 12px; color: #ffc12b; font-size: clamp(21px, 3.4vw, 25px); font-weight: 850; }
+    .error-copy { max-width: 480px; margin: 0 auto; color: #dedee2; font-size: 15px; line-height: 1.55; }
+    .deposit-label { margin: 31px 0 4px; color: #aaaeb9; font-size: 14px; }
+    .deposit-amount { color: #39d2a0; font-size: clamp(28px, 5vw, 34px); font-weight: 850; letter-spacing: .1px; }
+    .deposit-usd { margin-top: 1px; color: #888b94; font-size: 12px; }
+    .deposit-link-wrap {
+      display: block;
+      margin: 25px 0 13px;
+      padding: 6px;
+      border-radius: 19px;
+      background: linear-gradient(90deg, #076a48, #053e2e);
+      box-shadow: 0 0 16px rgba(0,181,113,.22);
+    }
+    .deposit-link {
+      min-height: 54px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 14px;
+      color: #10100b;
+      background: linear-gradient(100deg, #ffab00, #e98c00 68%, #11130f);
+      font-size: 16px;
+      font-weight: 850;
+      text-decoration: none;
+      box-shadow: inset 0 1px rgba(255,255,255,.38);
+      transition: filter .18s ease, transform .18s ease;
+    }
+    .deposit-link:hover { filter: brightness(1.08); transform: translateY(-1px); }
+    .deposit-link:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
+    .promo-card { padding: 14px 12px 12px; border-radius: 13px; background: #111a2b; color: #d5d7df; }
+    .promo-title { font-size: 13px; }
+    .promo-code { margin: 8px 0 5px; color: #47d9ab; font-size: 21px; font-weight: 850; letter-spacing: 1px; }
+    .promo-note { color: #9296a4; font-size: 11px; }
+    .promo-note strong { color: #e4a936; }
+    .offer-timer { margin: 14px 0 0; padding-top: 13px; border-top: 1px solid rgba(255,255,255,.13); color: #848793; font-size: 11px; }
+    .winners {
+      position: relative;
+      width: min(100%, 900px);
+      margin: 8px auto 60px;
+      padding: 28px clamp(15px, 4vw, 34px) 24px;
+      border: 2px solid #d8ac14;
+      border-radius: 29px;
+      background: radial-gradient(ellipse at 50% 0%, rgba(176,133,8,.09), transparent 55%), #0a0906;
+      box-shadow: 0 0 20px rgba(255,203,32,.21), inset 0 0 21px rgba(255,194,0,.035);
+      text-align: center;
+    }
+    .trophy {
+      position: absolute;
+      top: -17px;
+      left: 22px;
+      width: 62px;
+      height: 53px;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(255,205,41,.35);
+      border-radius: 50%;
+      background: #070705;
+      font-size: 28px;
+      box-shadow: 0 0 15px rgba(255,202,31,.2);
+    }
+    .gold-tag { color: #f4c333; border-color: #d6a820; background: rgba(193,142,0,.08); }
+    .winners h2 { margin: 10px 0 7px; color: #eac032; font-size: clamp(23px, 4.3vw, 32px); line-height: 1.2; text-shadow: 0 0 14px rgba(251,204,43,.26); }
+    .verified { margin: 0 auto 22px; color: #ffe188; font-size: 13px; font-weight: 700; }
+    .win-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 13px; text-align: left; }
+    .win-card {
+      min-height: 125px;
+      padding: 14px 16px;
+      border-left: 4px solid #ffd01e;
+      border-radius: 18px;
+      background: #030303;
+      box-shadow: 0 5px 16px rgba(0,0,0,.5);
+    }
+    .player-id { display: inline-block; padding: 5px 10px; border: 1px solid #836b14; border-radius: 99px; color: #f6d747; font-size: 13px; font-weight: 700; letter-spacing: .4px; }
+    .prize { margin-top: 11px; color: #ffc21c; font-size: 20px; font-weight: 850; text-shadow: 0 0 12px rgba(255,192,22,.26); }
+    .time { margin-top: 9px; color: #b6a65e; font-size: 12px; }
+    .win-foot { display: inline-block; margin: 21px auto 0; padding: 7px 12px; border-radius: 99px; color: #e8c347; background: #080705; font-size: 12px; }
+    .divider { width: min(420px, 70%); height: 2px; margin: 0 auto 30px; background: linear-gradient(90deg, transparent, #06dca6, #dc4b9c, transparent); opacity: .8; }
+    .modes { padding: 0 0 35px; text-align: center; }
+    .modes h2 { margin: 0 0 26px; font-size: clamp(25px, 4.5vw, 34px); line-height: 1.2; background: linear-gradient(90deg, #ed4ab0, #8e6be9, #ff526d); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .mode-grid { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 18px; }
+    .mode-card {
+      min-height: 220px;
+      padding: 25px 17px 20px;
+      border: 1px solid rgba(99,204,255,.55);
+      background: linear-gradient(105deg, rgba(86,22,51,.53), rgba(7,47,57,.68));
+      box-shadow: 0 0 16px rgba(30,208,241,.15), inset 0 0 18px rgba(244,55,161,.1);
+      transition: transform .2s ease, box-shadow .2s ease;
+    }
+    .mode-card:hover { transform: translateY(-3px); box-shadow: 0 0 23px rgba(30,208,241,.25); }
+    .mode-icons { min-height: 60px; font-size: 43px; line-height: 1; filter: drop-shadow(0 0 8px rgba(35,218,255,.28)); }
+    .mode-card h3 { margin: 4px 0 7px; color: #13d8ed; font-size: 31px; text-shadow: 0 0 13px rgba(12,211,239,.4); }
+    .mode-card p { min-height: 38px; margin: 0 auto 10px; color: #e3e3e8; font-size: 14px; font-weight: 700; line-height: 1.45; }
+    .mode-card .accuracy { color: #b7eccf; font-size: 12px; }
+    .mode-note { margin: 24px 0 0; padding: 0 0 22px; border-bottom: 1px solid var(--line); color: #aaaab1; font-size: 13px; font-style: italic; }
+    footer { padding: 23px 14px 27px; color: #767882; text-align: center; font-size: 12px; line-height: 1.7; }
+    @media (max-width: 650px) {
+      .wrap { width: min(100% - 30px, 520px); }
+      .hero { padding-top: 26px; padding-bottom: 51px; }
+      .connect-card, .error-box { width: min(100%, 445px); }
+      .connect-card { padding-top: 25px; padding-bottom: 24px; }
+      .error-box { margin-top: 40px; padding: 27px 14px 25px; }
+      .lock-art { min-height: 93px; padding-top: 3px; }
+      .winners { margin-top: 8px; border-radius: 28px; }
+      .win-list { grid-template-columns: 1fr; gap: 13px; }
+      .win-card { min-height: 112px; padding: 13px 16px; }
+      .mode-grid { grid-template-columns: 1fr; gap: 18px; }
+      .mode-card { min-height: 210px; padding-top: 27px; }
+      .mode-card p { min-height: 0; }
+    }
+    @media (max-width: 390px) {
+      .topbar { padding-inline: 9px; gap: 8px; }
+      .brand { font-size: 11px; letter-spacing: 0; }
+      .online { padding: 4px 7px; font-size: 9px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">🤖 HACKBOT PRO | COLOMBIA</div>
+    <div class="online" aria-live="polite"><span class="dot">🔴</span> ACTIVE: <span id="onlineCount">247</span> ONLINE</div>
+  </header>
+  <main>
+    <section class="hero wrap" aria-labelledby="hero-title">
+      <div class="eyebrow">🔥 OFICIAL COLOMBIA | HACKBOT v3.0</div>
+      <h1 id="hero-title">Gana con IA que PREDICE<br class="desktop-break"> antes del crash</h1>
+      <p class="intro">Algoritmo entrenado con <strong>+50,000 partidas</strong> de Aviator, Penalty y Mines. Efectividad comprobada: <span class="percent">97.8%</span></p>
+      <ul class="benefits"><li>Sin límites de retiro</li><li>Soporte 24/7</li><li>Actualización diaria</li></ul>
+      <div class="connect-card">
+        <div class="lock-art" aria-hidden="true">🔐 ✨</div>
+        <div class="verify">🔍 Verificamos tu ID y activamos las señales VIP</div>
+        <form id="connectForm" novalidate>
+          <label for="userId" class="sr-only">ID de usuario de 1xBet</label>
+          <input id="userId" name="userId" type="text" inputmode="numeric" autocomplete="off" placeholder="Ej: 1234567890" aria-describedby="formMessage">
+          <button class="submit" type="submit">🚀 CONECTAR Y ACTIVAR BOT</button>
+          <p id="formMessage" class="form-message" role="status" aria-live="polite"></p>
+        </form>
+        <div id="connectionResult" class="connection-result" hidden></div>
+      </div>
+      <section id="errorBox" class="error-box" aria-labelledby="errorTitle" hidden>
+        <div class="warning-icon" aria-hidden="true">⚠️</div>
+        <h2 id="errorTitle">SALDO INSUFICIENTE</h2>
+        <p class="error-copy">Para desbloquear <strong style="color:#42d3a4">HACKBOT PRO</strong> necesitas un depósito activo en 1xBet.</p>
+        <p class="deposit-label">Depósito mínimo requerido:</p>
+        <div class="deposit-amount">23,000 COP</div>
+        <div class="deposit-usd">(menos de 6 USD)</div>
+        <div class="deposit-link-wrap"><a class="deposit-link" href="https://reffpa.com/L?tag=d_6301756m_14205c_&site=6301756&ad=14205&r=registration" target="_blank" rel="noopener noreferrer">💰 DEPOSITAR EN 1XBET</a></div>
+        <div class="promo-card">
+          <div class="promo-title">🎁 CÓDIGO PROMOCIONAL ACTIVO:</div>
+          <div class="promo-code">CLA111</div>
+          <div class="promo-note">Usa este código al depositar → <strong>+100% BONO</strong></div>
+        </div>
+        <p class="offer-timer">⏳ Oferta válida por <span id="countdown">47:59:29</span> para usuarios verificados</p>
+      </section>
+    </section>
+    <section class="winners wrap" aria-labelledby="winners-title">
+      <div class="trophy" aria-hidden="true">🏆</div>
+      <div class="eyebrow gold-tag">🔥 ACTUALIZACIÓN EN VIVO</div>
+      <h2 id="winners-title">Últimos ganadores con HACKBOT PRO</h2>
+      <p class="verified">✅ Retiros verificados en tiempo real</p>
+      <div class="win-list" id="winList" aria-live="off"></div>
+      <div class="win-foot">⚡ Ganadores verificados por el sistema HACKBOT | IA activa 24/7</div>
+    </section>
+    <div class="divider" aria-hidden="true"></div>
+    <section class="modes wrap" aria-labelledby="modes-title">
+      <h2 id="modes-title">🎮 Modos de Hacking Activos 🔥</h2>
+      <div class="mode-grid">
+        <article class="mode-card">
+          <div class="mode-icons" aria-hidden="true">✈️💥</div>
+          <h3>Aviator</h3>
+          <p>Detección de crash con <strong>30s</strong> de anticipación</p>
+          <div class="accuracy">🔮 Precisión: 98.2%</div>
+        </article>
+        <article class="mode-card">
+          <div class="mode-icons" aria-hidden="true">💣💎</div>
+          <h3>Mines</h3>
+          <p>Escaneo de campos sin bombas + patrones</p>
+          <div class="accuracy">🎯 Acierto 96.5%</div>
+        </article>
+        <article class="mode-card">
+          <div class="mode-icons" aria-hidden="true">⚽🧤</div>
+          <h3>Penalty</h3>
+          <p>Predicción de gol o fallo al <strong>92%</strong></p>
+          <div class="accuracy">📊 IA avanzada en tiempo real</div>
+        </article>
+      </div>
+      <p class="mode-note">⚡ Los 3 modos activos simultáneamente para miembros HACKBOT PRO ⚡</p>
+    </section>
+  </main>
+  <footer>© 2026 HACKBOT PRO — Exclusivo para Colombia<br>Juega con responsabilidad. +18</footer>
+  <style>.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}</style>
+  <script>
+    const winnerSets = [
+      [
+        { id: '8283', amount: '920,000', mins: 3 },
+        { id: '3099', amount: '1,512,000', mins: 7 },
+        { id: '4518', amount: '1,230,000', mins: 12 },
+        { id: '9476', amount: '5,200,000', mins: 22 }
+      ],
+      [
+        { id: '2033', amount: '2,930,000', mins: 3 },
+        { id: '1187', amount: '640,000', mins: 7 },
+        { id: '3371', amount: '3,100,000', mins: 12 },
+        { id: '5640', amount: '1,875,000', mins: 22 }
+      ]
+    ];
+    const winList = document.getElementById('winList');
+    let winnerSet = 0;
+    function renderWinners() {
+      winList.innerHTML = winnerSets[winnerSet].map(w => `<article class="win-card"><div class="player-id">👤 ID: ****${w.id}</div><div class="prize">💰 ${w.amount} COP</div><div class="time">🕒 hace ${w.mins} min</div></article>`).join('');
+    }
+    renderWinners();
+    setInterval(() => {
+      document.getElementById('onlineCount').textContent = String(243 + Math.floor(Math.random() * 12));
+      winnerSet = (winnerSet + 1) % winnerSets.length;
+      renderWinners();
+    }, 16000);
+    const connectCard = document.querySelector('.connect-card');
+    const connectForm = document.getElementById('connectForm');
+    const connectInput = document.getElementById('userId');
+    const connectionResult = document.getElementById('connectionResult');
+    const errorBox = document.getElementById('errorBox');
+    connectForm.addEventListener('submit', event => {
+      event.preventDefault();
+      const id = connectInput.value.trim();
+      const message = document.getElementById('formMessage');
+      if (!/^\d{4,}$/.test(id)) {
+        message.textContent = 'Ingresá un ID válido de 1xBet (mínimo 4 dígitos).';
+        connectInput.setAttribute('aria-invalid', 'true');
+        alert(message.textContent);
+        return;
+      }
+      connectInput.removeAttribute('aria-invalid');
+      connectForm.querySelector('button[type="submit"]').disabled = true;
+      connectForm.querySelector('button[type="submit"]').textContent = '⏳ CONECTANDO...';
+      connectCard.classList.add('connecting');
+      window.setTimeout(() => {
+        connectForm.hidden = true;
+        connectionResult.innerHTML = `<p>✅ ID: ${id} conectado</p><p>🔓 Servidor Colombia: <strong>ACTIVO</strong></p><button id="getSignalButton" class="submit signal-button" type="button" aria-controls="errorBox" aria-expanded="false">🎯 OBTENER SEÑAL PREDICTIVA</button>`;
+        connectionResult.hidden = false;
+        connectCard.classList.remove('connecting');
+        connectCard.classList.add('is-connected');
+        document.getElementById('getSignalButton').addEventListener('click', event => {
+          errorBox.hidden = false;
+          event.currentTarget.setAttribute('aria-expanded', 'true');
+          startOfferCountdown();
+          errorBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        });
+      }, 1250);
+    });
+    connectInput.addEventListener('input', event => {
+      event.currentTarget.removeAttribute('aria-invalid');
+      document.getElementById('formMessage').textContent = '';
+    });
+    let countdownStarted = false;
+    function startOfferCountdown() {
+      if (countdownStarted) return;
+      countdownStarted = true;
+      let remaining = 47 * 3600 + 59 * 60 + 29;
+      const countdown = document.getElementById('countdown');
+      const renderCountdown = () => {
+        const hours = String(Math.floor(remaining / 3600)).padStart(2, '0');
+        const minutes = String(Math.floor((remaining % 3600) / 60)).padStart(2, '0');
+        const seconds = String(remaining % 60).padStart(2, '0');
+        countdown.textContent = `${hours}:${minutes}:${seconds}`;
+        if (remaining > 0) remaining -= 1;
+      };
+      renderCountdown();
+      window.setInterval(renderCountdown, 1000);
+    }
+  </script>
+</body>
+</html>
